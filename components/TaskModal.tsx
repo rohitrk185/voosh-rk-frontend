@@ -12,6 +12,7 @@ import { auth } from "@/utils/firebase";
 import { FirebaseTimestamp, GroupedTasks, Task } from "@/types/tasks";
 import { formatDate } from "@/utils";
 import { Timestamp } from "firebase/firestore";
+import toast from "react-hot-toast";
 
 type Props = {
   handleModalClose: () => void;
@@ -99,6 +100,7 @@ const TaskModal = ({
       setPageLoading(true);
 
       if (!user) {
+        toast.error("You are unauthenticated! Please Login...");
         console.error("User unauthenticated!");
         return;
       }
@@ -122,6 +124,7 @@ const TaskModal = ({
 
       if (type === "post") {
         if (!title) {
+          toast.error("Empty Task Title!");
           console.error("Title Empty!");
           return;
         }
@@ -155,6 +158,8 @@ const TaskModal = ({
               todo,
             };
           });
+
+          toast.success("Task saved Successfully!");
         }
       } else if (type === "edit" && selectedTask) {
         console.log("editing task...");
@@ -176,6 +181,7 @@ const TaskModal = ({
         console.log("edited data: ", data, Timestamp.fromMillis(data.dueDate));
         if (!Object.entries(data).length) {
           console.error("Nothing to edit in task: ", selectedTask.taskId);
+          toast.success("Task saved Successfully!");
           return;
         }
 
@@ -275,10 +281,13 @@ const TaskModal = ({
               done,
             };
           });
+
+          toast.success("Task saved Successfully!");
         }
       }
     } catch (error) {
       console.error("Error(handleTaskFormSubmit): ", error);
+      toast.error("Failed to save your task!");
     } finally {
       setPageLoading(false);
       handleModalClose();
@@ -290,6 +299,7 @@ const TaskModal = ({
       setPageLoading(true);
 
       if (!selectedTask || !user) {
+        toast.error("Failed to delete Task!");
         console.error("No task selected to delete");
         return;
       }
@@ -329,9 +339,12 @@ const TaskModal = ({
             done,
           };
         });
+
+        toast.success("Task Deleted Successfully!");
       }
       console.log("Response from backend: ", res);
     } catch (error) {
+      toast.success("Failed to Delete Task!");
       console.error("Error(handleSelectedTaskDelete): ", error);
     } finally {
       setPageLoading(false);

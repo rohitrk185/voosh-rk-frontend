@@ -10,6 +10,7 @@ import { GroupedTasks, ModalType, Task } from "@/types/tasks";
 import { TaskStatus } from "@/constants/tasks";
 import { formatDate } from "@/utils";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import toast from "react-hot-toast";
 
 type ModalDetails = {
   show: boolean;
@@ -72,9 +73,16 @@ export default function Tasks() {
             "in progress": inProgress,
             done,
           });
+
+          toast.success(
+            `Welcome Back ${user.displayName || user.email}! Here are your Todos`
+          );
+        } else {
+          toast.success(`Welcome Back ${user.displayName || user.email}!`);
         }
         console.log("Response from backend: ", res);
       } catch (error) {
+        toast.error("Unable to Fetch your Tasks!");
         console.error("Failed to Fetch: ", error);
       }
     };
@@ -110,6 +118,7 @@ export default function Tasks() {
 
   const updateTaskStatus = async (taskId: string, newStatus: string) => {
     if (!newStatus || !user) {
+      toast.error("Unable to update your task status!");
       console.log(
         "Invalid status for task | no user found: ",
         taskId,
@@ -134,7 +143,11 @@ export default function Tasks() {
 
       const res = await req.json();
       console.log("Response from backend: ", res, req.status);
+      if (req.status === 200) {
+        toast.success("Updated Task Status Successfully!");
+      }
     } catch (error) {
+      toast.error("Unable to update your task status!");
       console.error("Error(updateTaskStatus): ", error);
     }
   };
@@ -206,8 +219,6 @@ export default function Tasks() {
         [destColumn]: destColumnTasks,
       });
 
-      // Here you would typically update the task status on the backend
-      // For example: updateTaskStatus(result.draggableId, destColumn);
       console.log(`updating status of task to ${destColumn}...`);
       console.log("Updated! status of task...");
     }
@@ -234,6 +245,9 @@ export default function Tasks() {
           done,
         };
       });
+      toast.success("Sorted by Recently Added!", {
+        id: sortBy,
+      });
     } else if (sortBy === "name-asc") {
       setTasks((prev) => {
         const todo: Task[] = prev.todo.sort((t1: Task, t2: Task) =>
@@ -254,6 +268,9 @@ export default function Tasks() {
           done,
         };
       });
+      toast.success("Sorted by Name(Ascending)!", {
+        id: sortBy,
+      });
     } else if (sortBy === "name-desc") {
       setTasks((prev) => {
         const todo: Task[] = prev.todo.sort((t1: Task, t2: Task) =>
@@ -273,6 +290,9 @@ export default function Tasks() {
           "in progress": inProgress,
           done,
         };
+      });
+      toast.success("Sorted by Name(Descending)!", {
+        id: sortBy,
       });
     }
   };

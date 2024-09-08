@@ -11,6 +11,7 @@ import { auth } from "@/utils/firebase";
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { saveUserToDB } from "@/utils/firebase-auth";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const router = useRouter();
@@ -49,6 +50,7 @@ const Login = () => {
         : null;
 
       if (!email || !password) {
+        toast.error("Incorrect Email/Password!");
         return;
       }
 
@@ -59,8 +61,10 @@ const Login = () => {
         userCredential?.providerId
       );
 
+      toast.success("Login Successful!");
       router.push("/tasks");
     } catch (error) {
+      toast.error("Unable to Login! Try Again...");
       console.error("Error(handleLoginForm): ", error);
     } finally {
       setPageLoading(false);
@@ -72,7 +76,8 @@ const Login = () => {
       setPageLoading(true);
       const userCredential = await signInWithGoogle();
       if (!userCredential?.user) {
-        console.error("Failed to signin via google.");
+        toast.error("Failed to login via google.");
+        console.error("Failed to login via google.");
         return;
       }
 
@@ -87,8 +92,10 @@ const Login = () => {
       const jwtToken = await userCredential.user.getIdToken();
       saveUserToDB(name, email, jwtToken, "GOOGLE");
 
+      toast.success("Login Successful!");
       router.push("/tasks");
     } catch (error) {
+      toast.error("Unable to Login via Google! Try Again...");
       console.error("Error(handleGoogleLogin): ", error);
     } finally {
       setPageLoading(false);

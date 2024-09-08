@@ -10,6 +10,7 @@ import { auth } from "@/utils/firebase";
 import { useEffect, useState, FormEvent, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { saveUserToDB } from "@/utils/firebase-auth";
+import toast from "react-hot-toast";
 
 const Signup = () => {
   const router = useRouter();
@@ -56,6 +57,7 @@ const Signup = () => {
       // const {name, description, email, providerId} = req.body;
 
       if (!email || !password || !firstName) {
+        toast.error("Empty Name/Email/Password!");
         return;
       }
 
@@ -64,6 +66,7 @@ const Signup = () => {
         password
       );
       if (!userCredential) {
+        toast.error("Failed to Signup! Try Again...");
         console.error("Failed to Signup! Try Again...");
         return;
       }
@@ -78,9 +81,11 @@ const Signup = () => {
       // Save user data to DB
       await saveUserToDB(name, email, jwtToken, "EMAIL");
 
+      toast.success("Signup Successful!");
       router.push("/tasks");
     } catch (error) {
-      console.error("Error in login: ", error);
+      toast.error("Failed to Signup! Try Again...");
+      console.error("Error in Signup: ", error);
     } finally {
       setPageLoading(false);
     }
@@ -92,6 +97,7 @@ const Signup = () => {
 
       const userCredential = await signInWithGoogle();
       if (!userCredential?.user) {
+        toast.error("Failed to Signup! Try Again...");
         console.error("Failed to signin via google.");
         return;
       }
@@ -106,8 +112,11 @@ const Signup = () => {
       // Save user data to DB
       const jwtToken = await userCredential.user.getIdToken();
       saveUserToDB(name, email, jwtToken, "GOOGLE");
+
+      toast.success("Signup Successful!");
       router.push("/tasks");
     } catch (error) {
+      toast.error("Failed to Signup! Try Again...");
       console.error("Error(handleGoogleSignup): ", error);
     } finally {
       setPageLoading(false);

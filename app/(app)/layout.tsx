@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { auth } from "@/utils/firebase";
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
+import toast, { Toaster } from "react-hot-toast";
 
 interface LayoutProps {
   children: ReactNode;
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: LayoutProps) {
     const isLoggedOut = await signOut();
 
     if (!isLoggedOut) {
+      toast.error("Unable to Logout! Try Again...");
       console.error("Failed to logout");
     }
   };
@@ -81,6 +83,8 @@ export default function RootLayout({ children }: LayoutProps) {
           </div>
         </header>
         {children}
+
+        <Toaster />
       </body>
     </html>
   );
