@@ -2,7 +2,15 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+First, Install all the required dependencies:
+
+```bash
+npm install
+```
+
+Second, get the firebase app credentials and save it into .env.local(Use .env.example for the environment variable keys)
+
+Next, run the development server:
 
 ```bash
 npm run dev
