@@ -14,6 +14,8 @@ export default function Home() {
 
     if (!user) {
       router.replace("/login");
+    } else {
+      router.replace("/tasks");
     }
   }, [user, loading, router]);
 
