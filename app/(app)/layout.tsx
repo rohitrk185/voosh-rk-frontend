@@ -1,50 +1,18 @@
 "use client";
 
-// import type { Metadata } from "next";
 import { ReactNode } from "react";
-// import "./globals.css";
 import { Poppins } from "next/font/google";
 import { FaCalendarMinus } from "react-icons/fa";
-// import { useRouter } from "next/router";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { auth } from "@/utils/firebase";
 import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
 
-// export const metadata: Metadata = {
-//   title: "Tasks",
-//   description: "Tasks App",
-// };
 interface LayoutProps {
   children: ReactNode;
 }
 
-// export async function generateMetadata({
-//   params,
-// }: {
-//   params: { slug?: string };
-// }) {
-//   const pathname = params.slug ? `/${params.slug}` : "/";
-
-//   if (pathname === "/login") {
-//     return {
-//       title: "Login",
-//       description: "Login to Tasks App",
-//     };
-//   } else if (pathname === "/signup") {
-//     return {
-//       title: "Signup",
-//       description: "Signup to Tasks App",
-//     };
-//   }
-
-//   return {
-//     title: "Tasks",
-//     description: "Welcome to Tasks App",
-//   };
-// }
-
-export const poppinsInit = Poppins({
+const poppinsInit = Poppins({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-poppins",
