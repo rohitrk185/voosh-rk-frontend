@@ -213,6 +213,70 @@ export default function Tasks() {
     }
   };
 
+  const onSortByChange = (sortBy: string) => {
+    if (sortBy === "recent") {
+      setTasks((prev) => {
+        const todo: Task[] = prev.todo.sort(
+          (t1: Task, t2: Task) => t2.createdAt._seconds - t1.createdAt._seconds
+        );
+
+        const inProgress: Task[] = prev["in progress"].sort(
+          (t1: Task, t2: Task) => t2.createdAt._seconds - t1.createdAt._seconds
+        );
+
+        const done: Task[] = prev.done.sort(
+          (t1: Task, t2: Task) => t2.createdAt._seconds - t1.createdAt._seconds
+        );
+
+        return {
+          todo,
+          "in progress": inProgress,
+          done,
+        };
+      });
+    } else if (sortBy === "name-asc") {
+      setTasks((prev) => {
+        const todo: Task[] = prev.todo.sort((t1: Task, t2: Task) =>
+          t1.name.localeCompare(t2.name)
+        );
+
+        const inProgress: Task[] = prev["in progress"].sort(
+          (t1: Task, t2: Task) => t1.name.localeCompare(t2.name)
+        );
+
+        const done: Task[] = prev.done.sort((t1: Task, t2: Task) =>
+          t1.name.localeCompare(t2.name)
+        );
+
+        return {
+          todo,
+          "in progress": inProgress,
+          done,
+        };
+      });
+    } else if (sortBy === "name-desc") {
+      setTasks((prev) => {
+        const todo: Task[] = prev.todo.sort((t1: Task, t2: Task) =>
+          t2.name.localeCompare(t1.name)
+        );
+
+        const inProgress: Task[] = prev["in progress"].sort(
+          (t1: Task, t2: Task) => t2.name.localeCompare(t1.name)
+        );
+
+        const done: Task[] = prev.done.sort((t1: Task, t2: Task) =>
+          t2.name.localeCompare(t1.name)
+        );
+
+        return {
+          todo,
+          "in progress": inProgress,
+          done,
+        };
+      });
+    }
+  };
+
   if (loading) {
     return <h1>Loading...</h1>;
   }
@@ -270,9 +334,14 @@ export default function Tasks() {
           >
             Sort By:
           </label>
-          <select className="border px-2 py-1 rounded-md border-gray-400">
+          <select
+            className="border px-2 py-1 rounded-md border-gray-400"
+            onChange={(e) => onSortByChange(e.target.value)}
+            defaultValue={"name"}
+          >
             <option value={"recent"}>Recent</option>
-            <option value={"name"}>Name</option>
+            <option value={"name-asc"}>Name(Ascending)</option>
+            <option value={"name-desc"}>Name(Descending)</option>
           </select>
         </div>
       </div>
